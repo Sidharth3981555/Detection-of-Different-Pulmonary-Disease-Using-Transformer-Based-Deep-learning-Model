@@ -1,0 +1,50 @@
+
+This project implements a hybrid deep learning model that combines the strengths of CNNs (local feature extraction) and Vision Transformers (global dependency modeling) to detect various pulmonary diseases from medical imagery.
+
+By adding a Convolutional Block Attention Module (CBAM) and a Cross-Attention mechanism, the model can pinpoint subtle pathological signatures while maintaining an understanding of the overall lung structure.
+
+1. The Backbone: CNN (ResNet50)
+The code uses a ResNet50 backbone (stripped of its final classification layers). This acts as a powerful feature extractor. In medical imaging, CNNs are highly effective because they have a "spatial inductive bias"—they are naturally good at recognizing textures and edges, such as the hazy "ground-glass opacities" seen in pneumonia or the sharp edges of the rib cage.
+
+2. Local Refinement: CBAM Module
+Standard CNNs can sometimes be distracted by "noise" (e.g., medical equipment, bones, or soft tissue). The CBAM module solves this:
+
+Channel Attention: It learns which feature maps (channels) contain the most diagnostic information (e.g., focusing more on "opacity" features rather than "lighting" features).
+
+Spatial Attention: It learns where the disease is likely to be. It creates a mask that highlights the lung fields and suppresses irrelevant parts of the X-ray.
+
+3. Global Relational Modeling: Cross-Attention Block
+While the CNN looks at local patches, the Cross-Attention Block provides the "big picture."
+
+Instead of standard self-attention (where every patch looks at every other patch), we use Cross-Attention.
+
+A special CLS (Classification) Token acts as a "global scout." It queries all the local patches refined by CBAM to gather relevant information across the entire image. This is crucial for diseases like Cardiomegaly, where the diagnosis depends on the ratio of the heart size to the chest width.
+
+4. The Hybrid Flow
+The forward method in PulmonaryHybridNet ties it all together:
+
+Extract: ResNet pulls raw features.
+
+Focus: CBAM sharpens those features locally.
+
+Synthesize: The Transformer aggregates these sharp local features into a global diagnostic representation.
+
+Classify: The final linear head predicts the specific pulmonary disease.
+
+# Pulmonary Disease Detection using Hybrid CBAM-CrossViT
+
+This repository contains a PyTorch implementation of a hybrid model for detecting pulmonary diseases from X-ray/CT scans.
+
+##  Key Features
+- Hybrid Architecture: Combines ResNet50 with Vision Transformers.
+- Attention-Driven: Uses CBAM to focus on pathological regions of interest.
+- Cross-Attention: Employs a CLS-patch cross-attention mechanism for global context.
+
+##  Model Architecture
+The model consists of three main stages:
+1. Feature Extraction: Pre-trained ResNet50 backbone.
+2. Attention Refinement: Convolutional Block Attention Module (CBAM).
+3. Global Synthesis: Cross-Attention Vision Transformer (CrossViT) block.
+
+##  Performance & Explainability
+The use of attention modules allows for the generation of Attention Heatmaps, providing clinical interpretability by showing which areas the model used for its prediction.
