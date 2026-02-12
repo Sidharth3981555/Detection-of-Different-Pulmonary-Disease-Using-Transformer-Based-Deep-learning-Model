@@ -1,0 +1,2 @@
+# Detection-of-Different-Pulmonary-Disease-Using-Transformer-Based-Deep-learning-Model
+This repository implements a hybrid deep learning model for automatic detection of pulmonary diseases (e.g., Pneumonia, COVID-19, Atelectasis) from X-ray and CT images. It combines attention modules with a vision transformer to effectively capture both local lesion details and global image structure for improved diagnostic performance.
